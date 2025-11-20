@@ -1,0 +1,103 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Product Detection</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 Retail Product Detection</h1>
+            <p>Upload store images to detect products and their presence percentage</p>
+        </div>
+        
+        <div class="upload-section">
+            <div class="upload-box" id="uploadBox">
+                <div class="upload-icon">📸</div>
+                <p class="upload-text">Drag & Drop or Click to Upload Image</p>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
+                    Choose Image
+                </button>
+            </div>
+            
+            <div class="preview-section" id="previewSection" style="display: none;">
+                <img id="previewImage" class="preview-img" alt="Preview">
+                <button class="btn-primary" id="analyzeBtn" onclick="analyzeImage()">
+                    🔍 Analyze Products
+                </button>
+            </div>
+        </div>
+        
+        <div class="loading-section" id="loadingSection" style="display: none;">
+            <div class="spinner"></div>
+            <p>Analyzing image with AI...</p>
+        </div>
+        
+        <div class="error-section" id="errorSection" style="display: none;">
+            <p id="errorMessage"></p>
+        </div>
+        
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <h2>Detected Products</h2>
+            <div class="products-grid" id="productsGrid"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Product Detection</title>
+    <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 Retail Product Detection</h1>
+            <p>Upload store images to detect products and their presence percentage</p>
+        </div>
+        
+        <div class="upload-section">
+            <div class="upload-box" id="uploadBox">
+                <div class="upload-icon">📸</div>
+                <p class="upload-text">Drag & Drop or Click to Upload Image</p>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
+                    Choose Image
+                </button>
+            </div>
+            
+            <div class="preview-section" id="previewSection" style="display: none;">
+                <img id="previewImage" class="preview-img" alt="Preview">
+                <button class="btn-primary" id="analyzeBtn" onclick="analyzeImage()">
+                    🔍 Analyze Products
+                </button>
+            </div>
+        </div>
+        
+        <div class="loading-section" id="loadingSection" style="display: none;">
+            <div class="spinner"></div>
+            <p>Analyzing image with AI...</p>
+        </div>
+        
+        <div class="error-section" id="errorSection" style="display: none;">
+            <p id="errorMessage"></p>
+        </div>
+        
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <h2>Detected Products</h2>
+            <div class="products-grid" id="productsGrid"></div>
+        </div>
+    </div>
+    
+    <script src="script.js?v=2"></script>
+</body>
+</html>
