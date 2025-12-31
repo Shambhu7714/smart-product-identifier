@@ -7,7 +7,7 @@
     <title>Retail Product Detection</title>
     <!-- Tailwind CSS for utility and layout reliability -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="style.css?v=10">
     <style>
         /* =========================================
            ULTRA PREMIUM LOADER STYLES (COMPACT)
@@ -309,9 +309,49 @@
                 <p id="errorMessage"></p>
             </div>
 
-            <div class="results-section" id="resultsSection" style="display: none;">
+            <!-- <div class="results-section" id="resultsSection" style="display: none;">
                 <h2>Detected Products</h2>
                 <div class="products-grid" id="productsGrid"></div>
+            </div> -->
+
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="dashboard-container">
+                    <div class="dashboard-header-new">
+                        <h2 class="dashboard-title-new">📊 Product Detection Dashboard</h2>
+                        <div class="dashboard-stats-new" id="dashboardStats"></div>
+                    </div>
+                    <div class="treemap-container" id="productsGrid"></div>
+                </div>
+            </div>
+
+            <!-- NEW DASHBOARD -->
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="dashboard-container">
+                    <div class="dashboard-header-new">
+                        <h2 class="dashboard-title-new">📊 Detection Results</h2>
+                        <div class="dashboard-stats-new">
+                            <div class="stat-badge">
+                                <span class="text-lg">🔍</span>
+                                <span class="text-sm tracking-wide">Scanned Products</span>
+                                <strong id="scannedCount">0</strong>
+                            </div>
+                            <div class="stat-badge">
+                                <span class="text-lg">🎯</span>
+                                <span class="text-sm tracking-wide">Detected Products</span>
+                                <strong id="detectedCount">0</strong>
+                            </div>
+                            <div class="stat-badge">
+                                <span class="text-lg">🚀</span>
+                                <span class="text-sm tracking-wide">Unique Products</span>
+                                <strong id="uniqueCount">0</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="treemap-container" id="treemapContainer">
+                        <p class="loading-text">Loading treemap...</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -326,7 +366,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=7"></script>
+    <script src="script.js?v=10"></script>
 </body>
 
 </html>

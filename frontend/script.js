@@ -200,9 +200,114 @@ function resetProcessingSteps() {
     });
 }
 
-// Display results - grouped by company/brand
+// Display results - Heatmap Dashboard Style
+
+// function displayResults(products) {
+//     productsGrid.innerHTML = '';
+
+//     console.log('Raw products received:', products);
+
+//     if (!products || products.length === 0) {
+//         productsGrid.innerHTML = `
+//             <div class="no-products">
+//                 No products detected in the image.<br>
+//                 Try uploading a clearer image with visible products.
+//             </div>
+//         `;
+//     } else {
+//         // Calculate total percentage
+//         const totalPercentage = products.reduce((sum, p) => sum + p.percentage, 0);
+//         console.log('Total percentage:', totalPercentage);
+
+//         // Dashboard Header
+//         const dashboardHeader = document.createElement('div');
+//         dashboardHeader.className = 'dashboard-header';
+//         dashboardHeader.innerHTML = `
+//             <div class="dashboard-title">
+//                 <h2>📊 Product Detection Dashboard</h2>
+//                 <div class="dashboard-stats">
+//                     <span class="stat-item">
+//                         <strong>${products.length}</strong> Products Detected
+//                     </span>
+//                     <span class="stat-item">
+//                         <strong>${totalPercentage.toFixed(1)}%</strong> Total Coverage
+//                         ${totalPercentage >= 99.9 && totalPercentage <= 100.1 ? '✓' : '⚠️'}
+//                     </span>
+//                 </div>
+//             </div>
+//         `;
+//         productsGrid.appendChild(dashboardHeader);
+
+//         // Sort products by percentage (largest first)
+//         const sortedProducts = [...products].sort((a, b) => b.percentage - a.percentage);
+
+//         // Create heatmap container
+//         const heatmapContainer = document.createElement('div');
+//         heatmapContainer.className = 'heatmap-container';
+
+//         sortedProducts.forEach(product => {
+//             const heatmapBox = document.createElement('div');
+//             heatmapBox.className = 'heatmap-box';
+
+//             // Calculate size based on percentage (min 80px, max proportional)
+//             const baseSize = Math.max(80, Math.sqrt(product.percentage) * 30);
+//             heatmapBox.style.width = `${baseSize}px`;
+//             heatmapBox.style.height = `${baseSize}px`;
+
+//             // Color coding based on percentage
+//             const colorClass = getColorClass(product.percentage);
+//             heatmapBox.classList.add(colorClass);
+
+//             // Determine font size based on box size
+//             const fontSize = baseSize > 120 ? '14px' : baseSize > 90 ? '12px' : '10px';
+
+//             heatmapBox.innerHTML = `
+//                 <div class="heatmap-content" style="font-size: ${fontSize}">
+//                     <div class="heatmap-name">${escapeHtml(truncateText(product.product_name, baseSize))}</div>
+//                     <div class="heatmap-percentage">${product.percentage.toFixed(1)}%</div>
+//                 </div>
+//             `;
+
+//             // Tooltip with full name
+//             heatmapBox.title = `${product.product_name}: ${product.percentage.toFixed(1)}%`;
+
+//             heatmapContainer.appendChild(heatmapBox);
+//         });
+
+//         productsGrid.appendChild(heatmapContainer);
+//     }
+
+//     resultsSection.style.display = 'block';
+// }
+
+
+
+
+
+// Get color class based on percentage
+// function getColorClass(percentage) {
+//     if (percentage >= 15) return 'color-high';      // Green - High presence
+//     if (percentage >= 10) return 'color-medium-high'; // Light green
+//     if (percentage >= 5) return 'color-medium';      // Yellow/Orange
+//     if (percentage >= 2) return 'color-medium-low';  // Light red
+//     return 'color-low';                              // Red - Low presence
+// }
+
+// Truncate text to fit box
+
+// function truncateText(text, boxSize) {
+//     const maxLength = boxSize > 120 ? 25 : boxSize > 90 ? 18 : 12;
+//     if (text.length <= maxLength) return text;
+//     return text.substring(0, maxLength - 3) + '...';
+// }
+
+// Display results - Fully Dynamic Treemap
 function displayResults(products) {
+    const productsGrid = document.getElementById('productsGrid');
+    const dashboardStats = document.getElementById('dashboardStats');
+
     productsGrid.innerHTML = '';
+    dashboardStats.innerHTML = '';
 
     console.log('Raw products received:', products);
 
@@ -213,72 +318,279 @@ function displayResults(products) {
                 Try uploading a clearer image with visible products.
             </div>
         `;
-    } else {
-        // Calculate total percentage
-        const totalPercentage = products.reduce((sum, p) => sum + p.percentage, 0);
-        console.log('Total percentage:', totalPercentage);
-
-        // Show total at top
-        const totalDiv = document.createElement('div');
-        totalDiv.className = 'total-percentage';
-        totalDiv.innerHTML = `
-            <strong>Total Coverage: ${totalPercentage.toFixed(1)}%</strong>
-            ${totalPercentage < 99.9 || totalPercentage > 100.1 ?
-                '<span class="warning"> (Should be 100%)</span>' :
-                '<span class="success"> ✓</span>'}
-        `;
-        productsGrid.appendChild(totalDiv);
-
-        // Group products by company/brand
-        const groupedProducts = groupByCompany(products);
-        console.log('Grouped products:', groupedProducts);
-
-        // Display each company section
-        Object.keys(groupedProducts).sort().forEach(company => {
-            const companyData = groupedProducts[company];
-
-            console.log(`Creating section for ${company} with ${companyData.products.length} products, total: ${companyData.total}%`);
-
-            // Create company section
-            const companySection = document.createElement('div');
-            companySection.className = 'company-section';
-
-            // Company header with total percentage
-            const companyHeader = document.createElement('div');
-            companyHeader.className = 'company-header';
-            companyHeader.innerHTML = `
-                <h3>${escapeHtml(company)}</h3>
-                <div class="company-total">Total: ${companyData.total.toFixed(1)}%</div>
-                <div class="percentage-bar company-bar">
-                    <div class="percentage-fill" style="width: ${Math.min(companyData.total, 100)}%"></div>
-                </div>
-            `;
-            companySection.appendChild(companyHeader);
-
-            // Products grid for this company
-            const companyProductsGrid = document.createElement('div');
-            companyProductsGrid.className = 'company-products-grid';
-
-            companyData.products.forEach(product => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-                    <div class="product-name">${escapeHtml(product.product_name)}</div>
-                    <div class="product-percentage">${product.percentage.toFixed(1)}%</div>
-                    <div class="percentage-bar">
-                        <div class="percentage-fill" style="width: ${Math.min(product.percentage, 100)}%"></div>
-                    </div>
-                `;
-                companyProductsGrid.appendChild(card);
-            });
-
-            companySection.appendChild(companyProductsGrid);
-            productsGrid.appendChild(companySection);
-        });
+        return;
     }
+
+    // Calculate total percentage
+    const totalPercentage = products.reduce((sum, p) => sum + p.percentage, 0);
+    console.log('Total percentage:', totalPercentage);
+
+    // Dashboard Stats
+    dashboardStats.innerHTML = `
+        <div class="stat-badge">
+            <span>📦 Products:</span>
+            <strong>${products.length}</strong>
+        </div>
+        <div class="stat-badge">
+            <span>📊 Coverage:</span>
+            <strong>${totalPercentage.toFixed(1)}%</strong>
+            ${totalPercentage >= 99.5 && totalPercentage <= 100.5 ? '✓' : '⚠️'}
+        </div>
+        <div class="scroll-hint ${products.length > 30 ? 'visible' : ''}">
+            <span>↔️</span>
+            <span>Scroll to view all products</span>
+        </div>
+    `;
+
+    // Sort products by percentage (largest first)
+    const sortedProducts = [...products].sort((a, b) => b.percentage - a.percentage);
+
+    // Get container dimensions - ensure proper width calculation
+    const containerWidth = Math.floor(productsGrid.clientWidth) || 1200;
+
+    // Dynamic height based on number of products
+    let containerHeight;
+    if (sortedProducts.length <= 10) {
+        containerHeight = 500;
+    } else if (sortedProducts.length <= 30) {
+        containerHeight = 600;
+    } else if (sortedProducts.length <= 50) {
+        containerHeight = 700;
+    } else {
+        containerHeight = 800;
+    }
+
+    productsGrid.style.height = `${containerHeight}px`;
+
+    // Generate treemap layout that fits within container
+    const layout = generateDynamicTreemap(sortedProducts, containerWidth, containerHeight);
+
+    layout.forEach((box) => {
+        const treemapBox = document.createElement('div');
+        treemapBox.className = 'treemap-box';
+
+        // Set absolute positioning
+        treemapBox.style.left = `${box.x}px`;
+        treemapBox.style.top = `${box.y}px`;
+        treemapBox.style.width = `${box.width}px`;
+        treemapBox.style.height = `${box.height}px`;
+
+        // Dynamic color based on ranking
+        const colorClass = getDynamicColor(box.product, sortedProducts);
+        treemapBox.classList.add(colorClass);
+
+        // Responsive font sizing
+        const fontSize = calculateFontSize(box.width, box.height);
+
+        // Smart text handling
+        const displayName = getDisplayText(box.product.product_name, box.width, fontSize.name);
+
+        treemapBox.innerHTML = `
+            <div class="treemap-content">
+                <div class="treemap-ticker" style="font-size: ${fontSize.name}px">${escapeHtml(displayName)}</div>
+                <div class="treemap-percentage" style="font-size: ${fontSize.percent}px">${box.product.percentage.toFixed(1)}%</div>
+            </div>
+            <div class="treemap-tooltip">${escapeHtml(box.product.product_name)}: ${box.product.percentage.toFixed(1)}%</div>
+        `;
+
+        productsGrid.appendChild(treemapBox);
+    });
 
     resultsSection.style.display = 'block';
 }
+
+// Dynamic Treemap Generator - Squarified Algorithm
+function generateDynamicTreemap(products, containerWidth, containerHeight) {
+    const totalValue = products.reduce((sum, p) => sum + p.percentage, 0);
+    const normalizedProducts = products.map(p => ({
+        ...p,
+        normalizedValue: (p.percentage / totalValue) * (containerWidth * containerHeight)
+    }));
+
+    return squarify(normalizedProducts, 0, 0, containerWidth, containerHeight);
+}
+
+// Squarified Treemap Algorithm (Industry Standard)
+function squarify(items, x, y, width, height) {
+    if (items.length === 0) return [];
+    if (items.length === 1) {
+        return [{
+            product: items[0],
+            x: x,
+            y: y,
+            width: width - 2,
+            height: height - 2
+        }];
+    }
+
+    const totalArea = width * height;
+    const boxes = [];
+
+    // Sort by value for better aspect ratios
+    const sorted = [...items].sort((a, b) => b.normalizedValue - a.normalizedValue);
+
+    let remaining = [...sorted];
+    let currentX = x;
+    let currentY = y;
+    let availableWidth = width;
+    let availableHeight = height;
+
+    while (remaining.length > 0) {
+        // Determine layout direction
+        const horizontal = availableWidth >= availableHeight;
+
+        // Find best row/column
+        const row = getBestRow(remaining, horizontal ? availableWidth : availableHeight, horizontal);
+
+        // Calculate total value in row
+        const rowTotal = row.reduce((sum, item) => sum + item.normalizedValue, 0);
+        const rowRatio = rowTotal / (availableWidth * availableHeight);
+
+        if (horizontal) {
+            // Horizontal layout
+            const stripWidth = availableWidth * rowRatio;
+            let offsetY = currentY;
+
+            row.forEach(item => {
+                const itemHeight = (item.normalizedValue / rowTotal) * availableHeight;
+                boxes.push({
+                    product: item,
+                    x: Math.round(currentX),
+                    y: Math.round(offsetY),
+                    width: Math.round(stripWidth - 2),
+                    height: Math.round(itemHeight - 2)
+                });
+                offsetY += itemHeight;
+            });
+
+            currentX += stripWidth;
+            availableWidth -= stripWidth;
+        } else {
+            // Vertical layout
+            const stripHeight = availableHeight * rowRatio;
+            let offsetX = currentX;
+
+            row.forEach(item => {
+                const itemWidth = (item.normalizedValue / rowTotal) * availableWidth;
+                boxes.push({
+                    product: item,
+                    x: Math.round(offsetX),
+                    y: Math.round(currentY),
+                    width: Math.round(itemWidth - 2),
+                    height: Math.round(stripHeight - 2)
+                });
+                offsetX += itemWidth;
+            });
+
+            currentY += stripHeight;
+            availableHeight -= stripHeight;
+        }
+
+        // Remove processed items
+        remaining = remaining.filter(item => !row.includes(item));
+    }
+
+    return boxes;
+}
+
+// Get optimal row for squarified treemap
+function getBestRow(items, length, horizontal) {
+    if (items.length === 0) return [];
+    if (items.length === 1) return [items[0]];
+    if (items.length === 2) return items.slice(0, 2);
+
+    // Try different row sizes and pick best aspect ratio
+    let bestRow = [items[0]];
+    let bestRatio = Infinity;
+
+    for (let i = 1; i <= Math.min(items.length, 4); i++) {
+        const row = items.slice(0, i);
+        const ratio = calculateWorstAspectRatio(row, length);
+
+        if (ratio < bestRatio) {
+            bestRatio = ratio;
+            bestRow = row;
+        } else {
+            break; // Aspect ratio getting worse
+        }
+    }
+
+    return bestRow;
+}
+
+// Calculate worst aspect ratio for a row
+function calculateWorstAspectRatio(row, length) {
+    const total = row.reduce((sum, item) => sum + item.normalizedValue, 0);
+    const minVal = Math.min(...row.map(item => item.normalizedValue));
+    const maxVal = Math.max(...row.map(item => item.normalizedValue));
+
+    const lengthSquared = length * length;
+    const totalSquared = total * total;
+
+    return Math.max(
+        (lengthSquared * maxVal) / totalSquared,
+        totalSquared / (lengthSquared * minVal)
+    );
+}
+
+// Dynamic color assignment based on percentile
+function getDynamicColor(product, allProducts) {
+    const index = allProducts.findIndex(p => p.product_name === product.product_name);
+    const total = allProducts.length;
+    const percentile = (index / total) * 100;
+
+    // Color spectrum: Green (top) → Yellow → Orange → Red (bottom)
+    if (percentile < 15) return 'color-green-dark';
+    if (percentile < 30) return 'color-green';
+    if (percentile < 50) return 'color-green-light';
+    if (percentile < 70) return 'color-yellow';
+    if (percentile < 85) return 'color-red-light';
+    return 'color-red';
+}
+
+// Calculate responsive font sizes
+function calculateFontSize(width, height) {
+    const area = width * height;
+    const minDimension = Math.min(width, height);
+
+    // Name font size
+    let nameSize = 10;
+    if (area > 40000) nameSize = 14;
+    else if (area > 25000) nameSize = 13;
+    else if (area > 15000) nameSize = 12;
+    else if (area > 8000) nameSize = 11;
+    else if (minDimension < 60) nameSize = 8;
+
+    // Percentage font size
+    let percentSize = nameSize * 1.6;
+    if (area < 5000) percentSize = nameSize * 1.3;
+    if (minDimension < 60) percentSize = nameSize * 1.2;
+
+    return {
+        name: nameSize,
+        percent: percentSize
+    };
+}
+
+// Smart text display based on available width
+function getDisplayText(text, width, fontSize) {
+    const avgCharWidth = fontSize * 0.6;
+    const maxChars = Math.floor((width - 16) / avgCharWidth);
+
+    if (maxChars < 5) return text.substring(0, 3) + '..';
+    if (text.length <= maxChars) return text;
+
+    // Try to break at word boundary
+    const truncated = text.substring(0, maxChars - 3);
+    const lastSpace = truncated.lastIndexOf(' ');
+
+    if (lastSpace > maxChars / 2) {
+        return truncated.substring(0, lastSpace) + '...';
+    }
+
+    return truncated + '...';
+}
+
 
 // Group products by company/brand
 function groupByCompany(products) {

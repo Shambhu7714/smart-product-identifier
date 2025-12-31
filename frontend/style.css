@@ -419,161 +419,215 @@ body {
 }
 
 /* =============================
-   Results Section
+   Results Section - Dashboard
 ============================= */
 .results-section {
-    padding: 40px;
-}
-
-.results-section h2 {
-    font-size: 2em;
-    color: #333;
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 3px solid #667eea;
-}
-
-.actions-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-/* =============================
-   Total Percentage
-============================= */
-.total-percentage {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-    color: white;
     padding: 20px;
+    background: #0a0e27;
+    min-height: 400px;
+}
+
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* New Dashboard Header */
+.dashboard-header-new {
+    background: linear-gradient(135deg, #1a1f3a 0%, #2d3561 100%);
+    padding: 25px 30px;
     border-radius: 12px;
-    text-align: center;
-    font-size: 1.5em;
-    margin-bottom: 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.total-percentage .warning {
-    color: #ffeb3b;
-    font-size: 0.8em;
-    display: block;
-    margin-top: 5px;
-}
-
-.total-percentage .success {
-    color: #ffffff;
-    font-size: 1.2em;
-    margin-left: 10px;
-}
-
-/* =============================
-   Company Sections (Compact)
-============================= */
-.company-section {
-    margin-bottom: 25px;
-    background: white;
-    border-radius: 12px;
-    padding: 15px;
-    border: 1px solid #f3f4f6;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
-.company-header {
-    margin-bottom: 15px;
-    padding: 12px 15px;
-    background: #f9fafb;
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #e5e7eb;
-}
-
-.company-header h3 {
-    font-size: 1.1em;
-    color: #374151;
-    margin: 0;
-    font-weight: 600;
-}
-
-.company-total {
-    font-size: 1em;
+.dashboard-title-new {
+    font-size: 1.8em;
+    color: white;
+    margin: 0 0 15px 0;
     font-weight: 700;
-    color: #6366f1;
-    margin: 0;
+    letter-spacing: -0.5px;
 }
 
-/* Hide the big bar in header, make it subtle if needed or removed */
-.company-bar {
+.dashboard-stats-new {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95em;
+    align-items: center;
+}
+
+.scroll-hint {
     display: none;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(251, 191, 36, 0.15);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: 20px;
+    font-size: 0.85em;
+    color: #fbbf24;
 }
 
-/* =============================
-   Products Grid (Compact)
-============================= */
-.company-products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
+.scroll-hint.visible {
+    display: inline-flex;
 }
 
-.product-card {
-    background: white;
-    color: #1f2937;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #e5e7eb;
-    transition: all 0.2s ease;
+.stat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-badge strong {
+    color: #60a5fa;
+    font-size: 1.2em;
+}
+
+/* Treemap Container */
+.treemap-container {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    background: #0a0e27;
+    border-radius: 8px;
+    overflow: auto;
+    /* Enable scrolling if content overflows */
+}
+
+/* Treemap Box */
+.treemap-box {
+    position: absolute;
     display: flex;
     flex-direction: column;
-}
-
-.product-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    border-color: #c7d2fe;
-}
-
-.product-name {
-    font-size: 0.95em;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #4b5563;
-    line-height: 1.4;
-}
-
-.product-percentage {
-    font-size: 1.5em;
-    font-weight: 700;
-    color: #4f46e5;
-    margin: auto 0 8px 0;
-}
-
-/* =============================
-   Percentage Bars (Slim)
-============================= */
-.percentage-bar {
-    width: 100%;
-    height: 6px;
-    background: #f3f4f6;
-    border-radius: 999px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
-    margin-top: 0;
+    border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
-.percentage-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #6366f1, #8b5cf6);
-    border-radius: 999px;
+.treemap-box:hover {
+    transform: scale(1.02);
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    filter: brightness(1.15);
 }
 
-.percentage-fill {
-    height: 100%;
-    background: white;
-    border-radius: 10px;
-    transition: width 1s ease;
+.treemap-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
+    pointer-events: none;
 }
+
+/* Scrollbar styling */
+.treemap-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.treemap-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.treemap-container::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.5);
+    border-radius: 4px;
+}
+
+.treemap-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 126, 234, 0.7);
+}
+
+.treemap-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: white;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.treemap-ticker {
+    font-size: 0.75em;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.treemap-percentage {
+    font-size: 1.4em;
+    font-weight: 900;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Color scheme - Extended palette for more products */
+.color-green-dark {
+    background: linear-gradient(135deg, #15803d, #166534);
+}
+
+.color-green {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+.color-green-light {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.color-yellow {
+    background: linear-gradient(135deg, #eab308, #ca8a04);
+}
+
+.color-red-light {
+    background: linear-gradient(135deg, #f87171, #ef4444);
+}
+
+.color-red {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+/* Tooltip */
+.treemap-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background: rgba(0, 0, 0, 0.95);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.treemap-box:hover .treemap-tooltip {
+    opacity: 1;
+}
+
 
 /* =============================
    No Products / History
