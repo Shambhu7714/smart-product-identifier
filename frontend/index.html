@@ -1,103 +1,332 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retail Product Detection</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🏪 Retail Product Detection</h1>
-            <p>Upload store images to detect products and their presence percentage</p>
-        </div>
-        
-        <div class="upload-section">
-            <div class="upload-box" id="uploadBox">
-                <div class="upload-icon">📸</div>
-                <p class="upload-text">Drag & Drop or Click to Upload Image</p>
-                <input type="file" id="fileInput" accept="image/*" style="display: none;">
-                <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
-                    Choose Image
-                </button>
-            </div>
-            
-            <div class="preview-section" id="previewSection" style="display: none;">
-                <img id="previewImage" class="preview-img" alt="Preview">
-                <button class="btn-primary" id="analyzeBtn" onclick="analyzeImage()">
-                    🔍 Analyze Products
-                </button>
-            </div>
-        </div>
-        
-        <div class="loading-section" id="loadingSection" style="display: none;">
-            <div class="spinner"></div>
-            <p>Analyzing image with AI...</p>
-        </div>
-        
-        <div class="error-section" id="errorSection" style="display: none;">
-            <p id="errorMessage"></p>
-        </div>
-        
-        <div class="results-section" id="resultsSection" style="display: none;">
-            <h2>Detected Products</h2>
-            <div class="products-grid" id="productsGrid"></div>
-        </div>
-    </div>
-    
-    <script src="script.js"></script>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retail Product Detection</title>
-    <link rel="stylesheet" href="style.css?v=2">
+    <!-- Tailwind CSS for utility and layout reliability -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css?v=7">
+    <style>
+        /* =========================================
+           ULTRA PREMIUM LOADER STYLES (COMPACT)
+           ========================================= */
+        .tech-loader-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            perspective: 1000px;
+        }
+
+        .brain-center {
+            font-size: 2.5em;
+            z-index: 20;
+            filter: drop-shadow(0 0 15px rgba(102, 126, 234, 0.5));
+            animation: brain-pulse 2s ease-in-out infinite;
+        }
+
+        /* Rotating Soft Squares (Diamonds) */
+        .orbit-square {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid;
+            border-radius: 12px;
+            /* Soft corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .sq-1 {
+            width: 80px;
+            height: 80px;
+            border-color: rgba(102, 126, 234, 0.6);
+            /* Purple-ish */
+            animation: rotate-sq-1 12s linear infinite;
+        }
+
+        .sq-2 {
+            width: 60px;
+            height: 60px;
+            border-color: rgba(118, 75, 162, 0.6);
+            /* Deep Purple */
+            animation: rotate-sq-2 15s linear infinite reverse;
+            /* Counter rotate */
+        }
+
+        .sq-3 {
+            width: 95px;
+            height: 95px;
+            border: 1px dashed rgba(255, 0, 204, 0.3);
+            /* Pink dashed outer */
+            border-radius: 50%;
+            /* Circle actually */
+            animation: spin-slow 20s linear infinite;
+        }
+
+        /* Decorative Particles */
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            box-shadow: 0 0 10px white;
+        }
+
+        .p1 {
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            animation: orbit-p1 3s infinite linear;
+        }
+
+        @keyframes rotate-sq-1 {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes rotate-sq-2 {
+            0% {
+                transform: translate(-50%, -50%) rotate(45deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(-315deg);
+            }
+        }
+
+        @keyframes spin-slow {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes brain-pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        /* =========================================
+           GLASSMORPHIC PILL STEPS (COMPACT)
+           ========================================= */
+        .glass-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 999px;
+            color: #9ca3af;
+            /* Gray-400 */
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Active State */
+        .glass-pill.active {
+            background: rgba(255, 255, 255, 0.95);
+            color: #7c3aed;
+            /* Violet-600 */
+            border-color: #8b5cf6;
+            /* Violet-500 */
+            box-shadow: 0 5px 15px -5px rgba(124, 58, 237, 0.3);
+            transform: translateY(-2px);
+            z-index: 10;
+        }
+
+        /* Loading spinner for active pill */
+        .glass-pill.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #7c3aed, #db2777);
+            width: 100%;
+            animation: slide-loading 1.5s infinite linear;
+            transform-origin: left;
+        }
+
+        /* Completed State */
+        .glass-pill.completed {
+            background: linear-gradient(to right, #ecfdf5, #f0fdf4);
+            /* Emerald-50 */
+            border-color: #10b981;
+            /* Emerald-500 */
+            color: #059669;
+            /* Emerald-600 */
+            padding-right: 12px;
+        }
+
+        .check-mark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            background: #10b981;
+            color: white;
+            border-radius: 50%;
+            font-size: 10px;
+            margin-left: auto;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .glass-pill.completed .check-mark {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        @keyframes slide-loading {
+            0% {
+                transform: scaleX(0);
+            }
+
+            50% {
+                transform: scaleX(0.5);
+            }
+
+            100% {
+                transform: scaleX(1);
+                opacity: 0;
+            }
+        }
+
+        /* Text Gradient */
+        .gradient-heading {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
 </head>
+
 <body>
-    <div class="container">
+    <div class="container relative z-10 min-h-screen flex flex-col p-4 max-w-4xl">
         <div class="header">
             <h1>🏪 Retail Product Detection</h1>
-            <p>Upload store images to detect products and their presence percentage</p>
+            <p>Upload store images to detect products</p>
+            <button class="btn-history" onclick="toggleHistory()">
+                📜 History
+            </button>
         </div>
-        
-        <div class="upload-section">
+
+        <div class="upload-section flex-grow">
             <div class="upload-box" id="uploadBox">
-                <div class="upload-icon">📸</div>
-                <p class="upload-text">Drag & Drop or Click to Upload Image</p>
+                <div class="upload-icon text-4xl mb-4">📸</div>
+                <p class="upload-text text-sm mb-4">Click to Upload Image</p>
                 <input type="file" id="fileInput" accept="image/*" style="display: none;">
                 <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
                     Choose Image
                 </button>
             </div>
-            
-            <div class="preview-section" id="previewSection" style="display: none;">
-                <img id="previewImage" class="preview-img" alt="Preview">
-                <button class="btn-primary" id="analyzeBtn" onclick="analyzeImage()">
-                    🔍 Analyze Products
+
+            <div class="preview-section mt-4" id="previewSection" style="display: none;">
+                <img id="previewImage" class="preview-img" alt="Preview" style="max-height: 250px;">
+                <button class="btn-primary mt-4" id="analyzeBtn" onclick="analyzeImage()">
+                    🔍 Analyze
                 </button>
             </div>
+
+            <!-- NEW ULTIMATE LOADING SECTION (COMPACT) -->
+            <div class="loading-section" id="loadingSection" style="display: none;">
+                <div class="flex flex-col items-center justify-center py-6">
+
+                    <!-- 3D Orbit Loader -->
+                    <div class="tech-loader-container">
+                        <div class="brain-center">🧠</div>
+                        <div class="orbit-square sq-1"></div>
+                        <div class="orbit-square sq-2"></div>
+                        <div class="orbit-square sq-3"></div>
+                    </div>
+
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-extrabold gradient-heading mb-2 tracking-tight">AI Processing</h3>
+                        <p id="processingStatus" class="text-gray-500 text-sm font-medium">Initializing...</p>
+                    </div>
+
+                    <!-- Glass Pills Row -->
+                    <div class="flex flex-row flex-wrap justify-center gap-3 w-full max-w-2xl px-2" id="stepsContainer">
+
+                        <div class="glass-pill" id="step1">
+                            <span class="text-lg">🔍</span>
+                            <span class="text-sm tracking-wide">Scanning</span>
+                            <div class="check-mark">✓</div>
+                        </div>
+
+                        <div class="glass-pill" id="step2">
+                            <span class="text-lg">🧠</span>
+                            <span class="text-sm tracking-wide">Analysis</span>
+                            <div class="check-mark">✓</div>
+                        </div>
+
+                        <div class="glass-pill" id="step3">
+                            <span class="text-lg">📊</span>
+                            <span class="text-sm tracking-wide">Calculating</span>
+                            <div class="check-mark">✓</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="error-section" id="errorSection" style="display: none;">
+                <p id="errorMessage"></p>
+            </div>
+
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <h2>Detected Products</h2>
+                <div class="products-grid" id="productsGrid"></div>
+            </div>
         </div>
-        
-        <div class="loading-section" id="loadingSection" style="display: none;">
-            <div class="spinner"></div>
-            <p>Analyzing image with AI...</p>
-        </div>
-        
-        <div class="error-section" id="errorSection" style="display: none;">
-            <p id="errorMessage"></p>
-        </div>
-        
-        <div class="results-section" id="resultsSection" style="display: none;">
-            <h2>Detected Products</h2>
-            <div class="products-grid" id="productsGrid"></div>
+
+        <div class="history-section" id="historySection" style="display: none;">
+            <div class="history-header">
+                <h2>📜 Detection History</h2>
+                <button class="btn-close" onclick="toggleHistory()">✕</button>
+            </div>
+            <div class="history-content" id="historyContent">
+                <p class="loading-text">Loading history...</p>
+            </div>
         </div>
     </div>
-    
-    <script src="script.js?v=2"></script>
+
+    <script src="script.js?v=7"></script>
 </body>
+
 </html>

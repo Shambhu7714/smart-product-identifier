@@ -81,12 +81,12 @@ DETECTION_PROMPT = """
 
         Return ONLY a valid JSON array with this exact format:
         [
-            {"product_name": "Vivo Y series", "percentage": 15.5},
-            {"product_name": "Vivo V series", "percentage": 12.0},
-            {"product_name": "Samsung Galaxy A series", "percentage": 18.5},
-            {"product_name": "iPhone 15", "percentage": 10.0},
-            {"product_name": "Oppo A series", "percentage": 14.0},
-            {"product_name": "Realme phones", "percentage": 16.0},
+            {"product_name": "Product Name ", "percentage": 15.5},
+            {"product_name": "Product name ", "percentage": 12.0},
+            {"product_name": "Product Name ", "percentage": 18.5},
+            {"product_name": "Product Name ", "percentage": 10.0},
+            {"product_name": "Product Name ", "percentage": 14.0},
+            {"product_name": "Product Name ", "percentage": 16.0},
             {"product_name": "Other products", "percentage": 14.0}
         ]
 
@@ -116,7 +116,6 @@ async def detect_products_with_gemini(image_bytes: bytes, filename: str):
         ])
         
         text = response.text.strip()
-        
         # Clean response
         if text.startswith("```json"):
             text = text[7:]
@@ -128,13 +127,13 @@ async def detect_products_with_gemini(image_bytes: bytes, filename: str):
         text = text.strip()
         
         products = json.loads(text)
-        
+        print(f"Gemini Raw Response: {products}")
         if not isinstance(products, list):
             return []
         
         # Normalize percentages to total 100%
         products = normalize_percentages(products)
-        
+        print(f"Gemini Normalized Products: {products}")
         return products
         
     except Exception as e:
@@ -225,3 +224,5 @@ app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+
