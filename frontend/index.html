@@ -239,10 +239,10 @@
 <body>
     <div class="container relative z-10 min-h-screen flex flex-col p-4 max-w-4xl">
         <div class="header">
-            <h1>🏪 Retail Product Detection</h1>
+            <h1> Retail Product Detection</h1>
             <p>Upload store images to detect products</p>
             <button class="btn-history" onclick="toggleHistory()">
-                📜 History
+                History
             </button>
         </div>
 
@@ -296,7 +296,7 @@
                         </div>
 
                         <div class="glass-pill" id="step3">
-                            <span class="text-lg">📊</span>
+                            <span class="text-lg"></span>
                             <span class="text-sm tracking-wide">Calculating</span>
                             <div class="check-mark">✓</div>
                         </div>
@@ -309,47 +309,37 @@
                 <p id="errorMessage"></p>
             </div>
 
-            <!-- <div class="results-section" id="resultsSection" style="display: none;">
-                <h2>Detected Products</h2>
-                <div class="products-grid" id="productsGrid"></div>
-            </div> -->
-
+            <!-- Consolidated Results Section -->
             <div class="results-section" id="resultsSection" style="display: none;">
                 <div class="dashboard-container">
-                    <div class="dashboard-header-new">
-                        <h2 class="dashboard-title-new">📊 Product Detection Dashboard</h2>
-                        <div class="dashboard-stats-new" id="dashboardStats"></div>
-                    </div>
-                    <div class="treemap-container" id="productsGrid"></div>
-                </div>
-            </div>
-
-            <!-- NEW DASHBOARD -->
-            <div class="results-section" id="resultsSection" style="display: none;">
-                <div class="dashboard-container">
-                    <div class="dashboard-header-new">
-                        <h2 class="dashboard-title-new">📊 Detection Results</h2>
-                        <div class="dashboard-stats-new">
-                            <div class="stat-badge">
-                                <span class="text-lg">🔍</span>
-                                <span class="text-sm tracking-wide">Scanned Products</span>
-                                <strong id="scannedCount">0</strong>
-                            </div>
-                            <div class="stat-badge">
-                                <span class="text-lg">🎯</span>
-                                <span class="text-sm tracking-wide">Detected Products</span>
-                                <strong id="detectedCount">0</strong>
-                            </div>
-                            <div class="stat-badge">
-                                <span class="text-lg">🚀</span>
-                                <span class="text-sm tracking-wide">Unique Products</span>
-                                <strong id="uniqueCount">0</strong>
+                    <div class="dashboard-header-new flex justify-between items-center">
+                        <div>
+                            <h2 class="dashboard-title-new">Detection Results</h2>
+                            <div class="dashboard-stats-new" id="dashboardStats">
+                                <div class="stat-badge">
+                                    <span class="text-lg">🔍</span>
+                                    <span class="text-sm tracking-wide">Scanned</span>
+                                    <strong id="scannedCount">0</strong>
+                                </div>
+                                <div class="stat-badge">
+                                    <span class="text-lg">🎯</span>
+                                    <span class="text-sm tracking-wide">Detected</span>
+                                    <strong id="detectedCount">0</strong>
+                                </div>
+                                <div class="stat-badge">
+                                    <span class="text-lg">🚀</span>
+                                    <span class="text-sm tracking-wide">Unique</span>
+                                    <strong id="uniqueCount">0</strong>
+                                </div>
                             </div>
                         </div>
+                        <button class="btn-history" onclick="resetToUpload()">
+                            🔄 New Scan
+                        </button>
                     </div>
 
-                    <div class="treemap-container" id="treemapContainer">
-                        <p class="loading-text">Loading treemap...</p>
+                    <div class="treemap-container" id="productsGrid">
+                        <!-- Treemap will be rendered here -->
                     </div>
                 </div>
             </div>
@@ -366,6 +356,7 @@
         </div>
     </div>
 
+    <div id="historyBackdrop" class="history-backdrop" style="display: none;" onclick="toggleHistory()"></div>
     <script src="script.js?v=10"></script>
 </body>
 

@@ -15,12 +15,16 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     background: #ffffff;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 40px);
+    /* Fill screen minus body padding */
 }
 
 /* =============================
@@ -70,6 +74,9 @@ body {
 .upload-section {
     padding: 20px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .upload-box {
@@ -422,22 +429,28 @@ body {
    Results Section - Dashboard
 ============================= */
 .results-section {
-    padding: 20px;
+    padding: 15px;
     background: #0a0e27;
-    min-height: 400px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .dashboard-container {
-    max-width: 1400px;
+    width: 100%;
     margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 /* New Dashboard Header */
 .dashboard-header-new {
     background: linear-gradient(135deg, #1a1f3a 0%, #2d3561 100%);
-    padding: 25px 30px;
+    padding: 15px 20px;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -493,11 +506,12 @@ body {
 .treemap-container {
     position: relative;
     width: 100%;
-    height: 600px;
+    flex: 1;
     background: #0a0e27;
     border-radius: 8px;
-    overflow: auto;
-    /* Enable scrolling if content overflows */
+    overflow: hidden;
+    /* No scroll */
+    min-height: 200px;
 }
 
 /* Treemap Box */
@@ -643,22 +657,25 @@ body {
    History Section (Inline Mode)
 ============================= */
 .history-section {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin: 20px auto;
-    max-width: 800px;
-    padding: 20px;
-    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    padding: 25px;
+    z-index: 1000;
     display: none;
-    /* Controlled by JS */
+    border: 1px solid rgba(102, 126, 234, 0.2);
 }
 
 .history-content {
-    max-height: 350px;
-    /* Shows ~3 cards, rest scroll */
+    max-height: 60vh;
     overflow-y: auto;
-    padding-right: 5px;
+    padding-right: 10px;
 }
 
 /* Custom scrollbar for history */

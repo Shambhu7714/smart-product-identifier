@@ -69,11 +69,12 @@ async function analyzeImage() {
     formData.append('file', selectedFile);
 
     // Show loading with animation
+    uploadBox.style.display = 'none';
     previewSection.style.display = 'none';
     loadingSection.style.display = 'block';
     resultsSection.style.display = 'none';
     errorSection.style.display = 'none';
-    analyzeBtn.disabled = false;
+    analyzeBtn.disabled = true;
 
     // Animate processing steps
     animateProcessingSteps();
@@ -105,7 +106,8 @@ async function analyzeImage() {
 
     } catch (error) {
         showError('Error: ' + error.message);
-        loadingSection.style.display = 'none'; // Hide loading on error
+        loadingSection.style.display = 'none';
+        uploadBox.style.display = 'block'; // Ensure user can try again
         analyzeBtn.disabled = false;
     } finally {
         // Cleanup handled in displayResults or error
@@ -200,107 +202,6 @@ function resetProcessingSteps() {
     });
 }
 
-// Display results - Heatmap Dashboard Style
-
-// function displayResults(products) {
-//     productsGrid.innerHTML = '';
-
-//     console.log('Raw products received:', products);
-
-//     if (!products || products.length === 0) {
-//         productsGrid.innerHTML = `
-//             <div class="no-products">
-//                 No products detected in the image.<br>
-//                 Try uploading a clearer image with visible products.
-//             </div>
-//         `;
-//     } else {
-//         // Calculate total percentage
-//         const totalPercentage = products.reduce((sum, p) => sum + p.percentage, 0);
-//         console.log('Total percentage:', totalPercentage);
-
-//         // Dashboard Header
-//         const dashboardHeader = document.createElement('div');
-//         dashboardHeader.className = 'dashboard-header';
-//         dashboardHeader.innerHTML = `
-//             <div class="dashboard-title">
-//                 <h2>📊 Product Detection Dashboard</h2>
-//                 <div class="dashboard-stats">
-//                     <span class="stat-item">
-//                         <strong>${products.length}</strong> Products Detected
-//                     </span>
-//                     <span class="stat-item">
-//                         <strong>${totalPercentage.toFixed(1)}%</strong> Total Coverage
-//                         ${totalPercentage >= 99.9 && totalPercentage <= 100.1 ? '✓' : '⚠️'}
-//                     </span>
-//                 </div>
-//             </div>
-//         `;
-//         productsGrid.appendChild(dashboardHeader);
-
-//         // Sort products by percentage (largest first)
-//         const sortedProducts = [...products].sort((a, b) => b.percentage - a.percentage);
-
-//         // Create heatmap container
-//         const heatmapContainer = document.createElement('div');
-//         heatmapContainer.className = 'heatmap-container';
-
-//         sortedProducts.forEach(product => {
-//             const heatmapBox = document.createElement('div');
-//             heatmapBox.className = 'heatmap-box';
-
-//             // Calculate size based on percentage (min 80px, max proportional)
-//             const baseSize = Math.max(80, Math.sqrt(product.percentage) * 30);
-//             heatmapBox.style.width = `${baseSize}px`;
-//             heatmapBox.style.height = `${baseSize}px`;
-
-//             // Color coding based on percentage
-//             const colorClass = getColorClass(product.percentage);
-//             heatmapBox.classList.add(colorClass);
-
-//             // Determine font size based on box size
-//             const fontSize = baseSize > 120 ? '14px' : baseSize > 90 ? '12px' : '10px';
-
-//             heatmapBox.innerHTML = `
-//                 <div class="heatmap-content" style="font-size: ${fontSize}">
-//                     <div class="heatmap-name">${escapeHtml(truncateText(product.product_name, baseSize))}</div>
-//                     <div class="heatmap-percentage">${product.percentage.toFixed(1)}%</div>
-//                 </div>
-//             `;
-
-//             // Tooltip with full name
-//             heatmapBox.title = `${product.product_name}: ${product.percentage.toFixed(1)}%`;
-
-//             heatmapContainer.appendChild(heatmapBox);
-//         });
-
-//         productsGrid.appendChild(heatmapContainer);
-//     }
-
-//     resultsSection.style.display = 'block';
-// }
-
-
-
-
-
-// Get color class based on percentage
-// function getColorClass(percentage) {
-//     if (percentage >= 15) return 'color-high';      // Green - High presence
-//     if (percentage >= 10) return 'color-medium-high'; // Light green
-//     if (percentage >= 5) return 'color-medium';      // Yellow/Orange
-//     if (percentage >= 2) return 'color-medium-low';  // Light red
-//     return 'color-low';                              // Red - Low presence
-// }
-
-// Truncate text to fit box
-
-// function truncateText(text, boxSize) {
-//     const maxLength = boxSize > 120 ? 25 : boxSize > 90 ? 18 : 12;
-//     if (text.length <= maxLength) return text;
-//     return text.substring(0, maxLength - 3) + '...';
-// }
-
 // Display results - Fully Dynamic Treemap
 function displayResults(products) {
     const productsGrid = document.getElementById('productsGrid');
@@ -326,43 +227,34 @@ function displayResults(products) {
     console.log('Total percentage:', totalPercentage);
 
     // Dashboard Stats
-    dashboardStats.innerHTML = `
-        <div class="stat-badge">
-            <span>📦 Products:</span>
-            <strong>${products.length}</strong>
-        </div>
-        <div class="stat-badge">
-            <span>📊 Coverage:</span>
-            <strong>${totalPercentage.toFixed(1)}%</strong>
-            ${totalPercentage >= 99.5 && totalPercentage <= 100.5 ? '✓' : '⚠️'}
-        </div>
-        <div class="scroll-hint ${products.length > 30 ? 'visible' : ''}">
-            <span>↔️</span>
-            <span>Scroll to view all products</span>
-        </div>
-    `;
+    const scannedCount = document.getElementById('scannedCount');
+    const detectedCount = document.getElementById('detectedCount');
+    const uniqueCount = document.getElementById('uniqueCount');
+
+    // Simple unique products count
+    const uniqueProducts = new Set(products.map(p => p.product_name)).size;
+
+    if (scannedCount) scannedCount.textContent = products.length;
+    if (detectedCount) detectedCount.textContent = products.length; // Assuming all are detected
+    if (uniqueCount) uniqueCount.textContent = uniqueProducts;
 
     // Sort products by percentage (largest first)
     const sortedProducts = [...products].sort((a, b) => b.percentage - a.percentage);
 
-    // Get container dimensions - ensure proper width calculation
-    const containerWidth = Math.floor(productsGrid.clientWidth) || 1200;
+    // Show results section first so we can measure its actual available space (due to flexbox)
+    loadingSection.style.display = 'none';
+    resultsSection.style.display = 'flex';
+    resultsSection.style.flexDirection = 'column';
 
-    // Dynamic height based on number of products
-    let containerHeight;
-    if (sortedProducts.length <= 10) {
-        containerHeight = 500;
-    } else if (sortedProducts.length <= 30) {
-        containerHeight = 600;
-    } else if (sortedProducts.length <= 50) {
-        containerHeight = 700;
-    } else {
-        containerHeight = 800;
-    }
+    // Get actual available container width and height
+    const containerWidth = productsGrid.clientWidth || 1200;
 
-    productsGrid.style.height = `${containerHeight}px`;
+    // Now that it's visible, offsetHeight will give the actual flexed height
+    const containerHeight = productsGrid.offsetHeight || 600;
 
-    // Generate treemap layout that fits within container
+    console.log(`Rendering Treemap: ${containerWidth}x${containerHeight}`);
+
+    // Generate treemap layout that EXACTLY fits within container dimensions
     const layout = generateDynamicTreemap(sortedProducts, containerWidth, containerHeight);
 
     layout.forEach((box) => {
@@ -395,8 +287,17 @@ function displayResults(products) {
 
         productsGrid.appendChild(treemapBox);
     });
+}
 
-    resultsSection.style.display = 'block';
+// Reset UI for new analysis
+function resetToUpload() {
+    selectedFile = null;
+    fileInput.value = '';
+    uploadBox.style.display = 'block';
+    previewSection.style.display = 'none';
+    loadingSection.style.display = 'none';
+    resultsSection.style.display = 'none';
+    errorSection.style.display = 'none';
 }
 
 // Dynamic Treemap Generator - Squarified Algorithm
@@ -416,10 +317,10 @@ function squarify(items, x, y, width, height) {
     if (items.length === 1) {
         return [{
             product: items[0],
-            x: x,
-            y: y,
-            width: width - 2,
-            height: height - 2
+            x: Math.round(x),
+            y: Math.round(y),
+            width: Math.round(width),
+            height: Math.round(height)
         }];
     }
 
@@ -436,29 +337,32 @@ function squarify(items, x, y, width, height) {
     let availableHeight = height;
 
     while (remaining.length > 0) {
-        // Determine layout direction
+        // Determine layout direction based on aspect ratio
         const horizontal = availableWidth >= availableHeight;
 
-        // Find best row/column
+        // Find best row/column that minimizes aspect ratio
         const row = getBestRow(remaining, horizontal ? availableWidth : availableHeight, horizontal);
 
         // Calculate total value in row
         const rowTotal = row.reduce((sum, item) => sum + item.normalizedValue, 0);
-        const rowRatio = rowTotal / (availableWidth * availableHeight);
+        const remainingTotal = remaining.reduce((sum, item) => sum + item.normalizedValue, 0);
+        const rowRatio = rowTotal / remainingTotal;
 
         if (horizontal) {
-            // Horizontal layout
+            // Horizontal layout - boxes stacked vertically in a column
             const stripWidth = availableWidth * rowRatio;
             let offsetY = currentY;
 
             row.forEach(item => {
-                const itemHeight = (item.normalizedValue / rowTotal) * availableHeight;
+                const itemRatio = item.normalizedValue / rowTotal;
+                const itemHeight = availableHeight * itemRatio;
+
                 boxes.push({
                     product: item,
                     x: Math.round(currentX),
                     y: Math.round(offsetY),
-                    width: Math.round(stripWidth - 2),
-                    height: Math.round(itemHeight - 2)
+                    width: Math.max(30, Math.round(stripWidth - 1)), // Min width 30px
+                    height: Math.max(30, Math.round(itemHeight - 1)) // Min height 30px
                 });
                 offsetY += itemHeight;
             });
@@ -466,18 +370,20 @@ function squarify(items, x, y, width, height) {
             currentX += stripWidth;
             availableWidth -= stripWidth;
         } else {
-            // Vertical layout
+            // Vertical layout - boxes arranged horizontally in a row
             const stripHeight = availableHeight * rowRatio;
             let offsetX = currentX;
 
             row.forEach(item => {
-                const itemWidth = (item.normalizedValue / rowTotal) * availableWidth;
+                const itemRatio = item.normalizedValue / rowTotal;
+                const itemWidth = availableWidth * itemRatio;
+
                 boxes.push({
                     product: item,
                     x: Math.round(offsetX),
                     y: Math.round(currentY),
-                    width: Math.round(itemWidth - 2),
-                    height: Math.round(stripHeight - 2)
+                    width: Math.max(30, Math.round(itemWidth - 1)), // Min width 30px
+                    height: Math.max(30, Math.round(stripHeight - 1)) // Min height 30px
                 });
                 offsetX += itemWidth;
             });
@@ -486,7 +392,7 @@ function squarify(items, x, y, width, height) {
             availableHeight -= stripHeight;
         }
 
-        // Remove processed items
+        // Remove processed items from remaining
         remaining = remaining.filter(item => !row.includes(item));
     }
 
@@ -712,40 +618,23 @@ function downloadResult() {
 }
 
 
-// Toggle history section (inline mode)
-// async function toggleHistory() {
-//     const historySection = document.getElementById('historySection');
-//     const historyContent = document.getElementById('historyContent');
-
-//     if (historySection.style.display === 'none' || !historySection.style.display) {
-//         // Show inline
-//         historySection.style.display = 'block';
-//         historyContent.innerHTML = '<p class="loading-text">Loading history...</p>';
-//         await loadHistory();
-//         // Scroll to history section
-//         historySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-//     } else {
-//         // Hide
-//         historySection.style.display = 'none';
-//     }
-// }
-
 async function toggleHistory() {
     const historySection = document.getElementById("historySection");
     const historyContent = document.getElementById("historyContent");
+    const historyBackdrop = document.getElementById("historyBackdrop");
 
     const isOpen = historySection.style.display === "block";
 
     if (isOpen) {
         historySection.style.display = "none";
+        historyBackdrop.style.display = "none";
         return;
     }
 
     historySection.style.display = "block";
+    historyBackdrop.style.display = "block";
     historyContent.innerHTML = `<p class="loading-text">Loading history...</p>`;
     await loadHistory();
-
-    historySection.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 
@@ -818,4 +707,3 @@ function viewHistoryItem(index) {
     // This could be enhanced to show the full details of a history item
     console.log('Viewing history item:', index);
 }
-

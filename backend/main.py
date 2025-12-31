@@ -116,7 +116,7 @@ async def detect_products_with_gemini(image_bytes: bytes, filename: str):
         text = text.strip()
         
         products = json.loads(text)
-        print(f"Gemini Raw Response: {products}")
+        # print(f"Gemini Raw Response: {products}")
         if not isinstance(products, list):
             return []
         
