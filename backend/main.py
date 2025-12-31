@@ -29,22 +29,22 @@ if not GEMINI_API_KEY:
 
 genai.configure(api_key=GEMINI_API_KEY)
 
-# Database
-def init_db():
-    conn = sqlite3.connect("products.db")
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS detections (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            image_name TEXT,
-            upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            products TEXT
-        )
-    """)
-    conn.commit()
-    conn.close()
+# # Database
+# def init_db():
+#     conn = sqlite3.connect("products.db")
+#     cursor = conn.cursor()
+#     cursor.execute("""
+#         CREATE TABLE IF NOT EXISTS detections (
+#             id INTEGER PRIMARY KEY AUTOINCREMENT,
+#             image_name TEXT,
+#             upload_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+#             products TEXT
+#         )
+#     """)
+#     conn.commit()
+#     conn.close()
 
-init_db()
+# init_db()
 
 # Gemini prompt
 DETECTION_PROMPT = """
@@ -160,15 +160,15 @@ async def detect_products(file: UploadFile = File(...)):
         # Detect with Gemini
         products = await detect_products_with_gemini(image_bytes, file.filename)
         
-        # Save to database
-        conn = sqlite3.connect("products.db")
-        cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO detections (image_name, products) VALUES (?, ?)",
-            (file.filename, json.dumps(products))
-        )
-        conn.commit()
-        conn.close()
+        # # Save to database
+        # conn = sqlite3.connect("products.db")
+        # cursor = conn.cursor()
+        # cursor.execute(
+        #     "INSERT INTO detections (image_name, products) VALUES (?, ?)",
+        #     (file.filename, json.dumps(products))
+        # )
+        # conn.commit()
+        # conn.close()
         
         return JSONResponse({
             "success": True,
@@ -180,32 +180,36 @@ async def detect_products(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# @app.get("/api/history")
+# async def get_history():
+#     try:
+#         conn = sqlite3.connect("products.db")
+#         cursor = conn.cursor()
+#         cursor.execute("""
+#             SELECT image_name, upload_time, products 
+#             FROM detections 
+#             ORDER BY upload_time DESC 
+#             LIMIT 50
+#         """)
+#         rows = cursor.fetchall()
+#         conn.close()
+#         
+#         history = []
+#         for row in rows:
+#             history.append({
+#                 "image_name": row[0],
+#                 "upload_time": row[1],
+#                 "products": json.loads(row[2])
+#             })
+#         
+#         return JSONResponse({"success": True, "data": history})
+#         
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/api/history")
 async def get_history():
-    try:
-        conn = sqlite3.connect("products.db")
-        cursor = conn.cursor()
-        cursor.execute("""
-            SELECT image_name, upload_time, products 
-            FROM detections 
-            ORDER BY upload_time DESC 
-            LIMIT 50
-        """)
-        rows = cursor.fetchall()
-        conn.close()
-        
-        history = []
-        for row in rows:
-            history.append({
-                "image_name": row[0],
-                "upload_time": row[1],
-                "products": json.loads(row[2])
-            })
-        
-        return JSONResponse({"success": True, "data": history})
-        
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return JSONResponse({"success": True, "data": []})
 
 # Mount frontend static files (must be last)
 app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
