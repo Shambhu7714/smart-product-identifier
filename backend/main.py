@@ -20,6 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Environment variables
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3-pro-preview")
@@ -207,6 +208,7 @@ async def detect_products(file: UploadFile = File(...)):
 #     except Exception as e:
 #         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.get("/api/history")
 async def get_history():
     return JSONResponse({"success": True, "data": []})
@@ -217,5 +219,4 @@ app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
 
